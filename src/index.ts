@@ -2,9 +2,7 @@ import { getInput, info, setFailed } from '@actions/core';
 import { formatAndNotify } from './utils';
 
 try {
-  // eslint-disable-next-line eqeqeq
-  const showCardOnStart = getInput(`show-on-start`).toLowerCase() == `true`;
-  info(getInput(`show-on-start`));
+  const showCardOnStart = JSON.parse(getInput(`show-on-start`).toLowerCase()) === true;
   info(`showCardOnStart: ${showCardOnStart}`);
   if (showCardOnStart) {
     void formatAndNotify(`start`);
