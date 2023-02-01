@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "description": "Microsoft Teams Deploy Card",
   "main": "index.ts",
-  "repository": "https://github.com/toko-bifrost/ms-teams-deploy-card",
-  "author": "Aldwyn Cabarrubias",
+  "repository": "https://github.com/reediculous456/ms-teams-deploy-card",
+  "author": "Wes Reed",
   "license": "MIT",
   "private": false,
   "dependencies": {
