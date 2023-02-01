@@ -3,7 +3,6 @@ import { formatAndNotify } from './utils';
 
 try {
   const showCardOnStart = JSON.parse(getInput(`show-on-start`).toLowerCase()) === true;
-  console.log(getInput(`show-on-start`).toLowerCase(), showCardOnStart);
   if (showCardOnStart) {
     void formatAndNotify(`start`);
   } else {
