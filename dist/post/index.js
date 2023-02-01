@@ -23682,15 +23682,20 @@ exports.submitNotification = submitNotification;
 const formatAndNotify = async (state, conclusion = `in_progress`, elapsedSeconds) => {
     let webhookBody;
     const { data: commit } = await (0, exports.getOctokitCommit)();
-    const cardLayoutStart = (0, core_1.getInput)(`card-layout-${state}`);
-    if (cardLayoutStart === `compact`) {
-        webhookBody = (0, compact_1.formatCompactLayout)(commit, conclusion, elapsedSeconds);
-    }
-    else if (cardLayoutStart === `cozy`) {
-        webhookBody = (0, cozy_1.formatCozyLayout)(commit, conclusion, elapsedSeconds);
-    }
-    else {
-        webhookBody = (0, complete_1.formatCompleteLayout)(commit, conclusion, elapsedSeconds);
+    const cardLayout = (0, core_1.getInput)(`card-layout-${state}`);
+    switch (cardLayout) {
+        case `compact`:
+            webhookBody = (0, compact_1.formatCompactLayout)(commit, conclusion, elapsedSeconds);
+            break;
+        case `cozy`:
+            webhookBody = (0, cozy_1.formatCozyLayout)(commit, conclusion, elapsedSeconds);
+            break;
+        case `complete`:
+            webhookBody = (0, complete_1.formatCompleteLayout)(commit, conclusion, elapsedSeconds);
+            break;
+        default:
+            (0, core_1.setFailed)(`Invalid card layout: ${cardLayout}`);
+            break;
     }
     await (0, exports.submitNotification)(webhookBody);
 };

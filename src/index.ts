@@ -4,6 +4,8 @@ import { formatAndNotify } from './utils';
 try {
   // eslint-disable-next-line eqeqeq
   const showCardOnStart = getInput(`show-on-start`).toLowerCase() == `true`;
+  info(getInput(`show-on-start`));
+  info(`showCardOnStart: ${showCardOnStart}`);
   if (showCardOnStart) {
     void formatAndNotify(`start`);
   } else {

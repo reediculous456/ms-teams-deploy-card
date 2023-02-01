@@ -23682,15 +23682,20 @@ exports.submitNotification = submitNotification;
 const formatAndNotify = async (state, conclusion = `in_progress`, elapsedSeconds) => {
     let webhookBody;
     const { data: commit } = await (0, exports.getOctokitCommit)();
-    const cardLayoutStart = (0, core_1.getInput)(`card-layout-${state}`);
-    if (cardLayoutStart === `compact`) {
-        webhookBody = (0, compact_1.formatCompactLayout)(commit, conclusion, elapsedSeconds);
-    }
-    else if (cardLayoutStart === `cozy`) {
-        webhookBody = (0, cozy_1.formatCozyLayout)(commit, conclusion, elapsedSeconds);
-    }
-    else {
-        webhookBody = (0, complete_1.formatCompleteLayout)(commit, conclusion, elapsedSeconds);
+    const cardLayout = (0, core_1.getInput)(`card-layout-${state}`);
+    switch (cardLayout) {
+        case `compact`:
+            webhookBody = (0, compact_1.formatCompactLayout)(commit, conclusion, elapsedSeconds);
+            break;
+        case `cozy`:
+            webhookBody = (0, cozy_1.formatCozyLayout)(commit, conclusion, elapsedSeconds);
+            break;
+        case `complete`:
+            webhookBody = (0, complete_1.formatCompleteLayout)(commit, conclusion, elapsedSeconds);
+            break;
+        default:
+            (0, core_1.setFailed)(`Invalid card layout: ${cardLayout}`);
+            break;
     }
     await (0, exports.submitNotification)(webhookBody);
 };
@@ -35230,7 +35235,9 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 const core_1 = __nccwpck_require__(2186);
 const utils_1 = __nccwpck_require__(1314);
 try {
-    const showCardOnStart = JSON.parse((0, core_1.getInput)(`show-on-start`).toLowerCase()) === true;
+    const showCardOnStart = (0, core_1.getInput)(`show-on-start`).toLowerCase() == `true`;
+    (0, core_1.info)((0, core_1.getInput)(`show-on-start`));
+    (0, core_1.info)(`showCardOnStart: ${showCardOnStart}`);
     if (showCardOnStart) {
         void (0, utils_1.formatAndNotify)(`start`);
     }
