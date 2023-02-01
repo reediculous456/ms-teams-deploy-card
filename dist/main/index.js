@@ -35236,7 +35236,6 @@ const core_1 = __nccwpck_require__(2186);
 const utils_1 = __nccwpck_require__(1314);
 try {
     const showCardOnStart = JSON.parse((0, core_1.getInput)(`show-on-start`).toLowerCase()) === true;
-    (0, core_1.info)(`showCardOnStart: ${showCardOnStart}`);
     if (showCardOnStart) {
         void (0, utils_1.formatAndNotify)(`start`);
     }
