@@ -8,7 +8,7 @@
   "license": "MIT",
   "private": false,
   "scripts": {
-    "ncc": "ncc build src/index.ts -m -o dist/main && ncc build src/post.ts -m -o dist/post",
+    "build": "rimraf dist && tsc",
     "lint": "eslint src",
     "lint:fix": "npm run lint -- --fix",
     "audit": "audit-ci --config .audit-ci.json",
@@ -28,7 +28,6 @@
     "@types/node-fetch": "^2.6.2",
     "@typescript-eslint/eslint-plugin": "^5.48.1",
     "@typescript-eslint/parser": "^5.48.1",
-    "@zeit/ncc": "^0.22.3",
     "audit-ci": "^6.6.0",
     "eslint": "^8.31.0",
     "eslint-plugin-import": "^2.26.0",
@@ -36,6 +35,7 @@
     "eslint-plugin-sort-destructure-keys": "^1.4.0",
     "husky": "^7.0.4",
     "npm-check-updates": "^16.6.3",
+    "rimraf": "^4.1.2",
     "typescript": "^4.9.5"
   }
 }

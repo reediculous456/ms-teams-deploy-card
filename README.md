@@ -81,7 +81,7 @@ jobs:
 
 1. Clone this repository.
 2. Install JS dependencies via `npm install`.
-3. Before pushing you changes, execute `npm run ncc` to create a build on `dist`.
+3. Before pushing you changes, execute `npm run build` to create a build on `dist`.
 4. Do not remove the `dist` repository. Ever.
 5. Check the Actions tab for the errors if there are any.
 
