@@ -23334,7 +23334,7 @@ const constants_1 = __nccwpck_require__(9042);
 const formatCompactLayout = (commit, conclusion, elapsedSeconds) => {
     var _a;
     const { author } = commit;
-    const repoUrl = `https://github.com/${process.env.GITHUB_REPOSITORY}`;
+    const repoUrl = `https://${process.env.GITHUB_SERVER_URL}/${process.env.GITHUB_REPOSITORY}`;
     const shortSha = (_a = process.env.GITHUB_SHA) === null || _a === void 0 ? void 0 : _a.substr(0, 7);
     const runLink = `${repoUrl}/actions/runs/${process.env.GITHUB_RUN_ID}`;
     const webhookBody = new models_1.WebhookBody();
@@ -23391,7 +23391,7 @@ const formatFilesToDisplay = (files, allowedLength, htmlUrl) => {
 exports.formatFilesToDisplay = formatFilesToDisplay;
 const formatCompleteLayout = (commit, conclusion, elapsedSeconds) => {
     var _a, _b;
-    const repoUrl = `https://github.com/${process.env.GITHUB_REPOSITORY}`;
+    const repoUrl = `https://${process.env.GITHUB_SERVER_URL}/${process.env.GITHUB_REPOSITORY}`;
     const branchUrl = `${repoUrl}/tree/${process.env.GITHUB_REF}`;
     const webhookBody = (0, cozy_1.formatCozyLayout)(commit, conclusion, elapsedSeconds);
     const [section] = webhookBody.sections;
@@ -23468,7 +23468,7 @@ const formatCozyLayout = (commit, conclusion, elapsedSeconds) => {
         .tz(timezone)
         .format(`dddd, MMMM Do YYYY, h:mm:ss a z`);
     const webhookBody = new models_1.WebhookBody();
-    const repoUrl = `https://github.com/${process.env.GITHUB_REPOSITORY}`;
+    const repoUrl = `https://${process.env.GITHUB_SERVER_URL}/${process.env.GITHUB_REPOSITORY}`;
     const shortSha = (_a = process.env.GITHUB_SHA) === null || _a === void 0 ? void 0 : _a.substr(0, 7);
     let labels = `\`${conclusion.toUpperCase()}\``;
     if (elapsedSeconds) {
@@ -23604,10 +23604,9 @@ exports.octokit = void 0;
 const core_1 = __nccwpck_require__(2186);
 const rest_1 = __nccwpck_require__(5375);
 const githubToken = (0, core_1.getInput)(`github-token`, { required: true });
-const githubApiUrl = (0, core_1.getInput)(`github-api-url`, { required: false, trimWhitespace: true });
 exports.octokit = new rest_1.Octokit({
     auth: `token ${githubToken}`,
-    baseUrl: githubApiUrl,
+    baseUrl: process.env.GITHUB_API_URL,
 });
 
 
@@ -23642,7 +23641,7 @@ exports.escapeMarkdownTokens = escapeMarkdownTokens;
 const getRunInformation = () => {
     const [owner, repo] = (process.env.GITHUB_REPOSITORY || ``).split(`/`);
     return {
-        branchUrl: `https://github.com/${process.env.GITHUB_REPOSITORY}/tree/${process.env.GITHUB_REF}`,
+        branchUrl: `${process.env.GITHUB_SERVER_URL}/${process.env.GITHUB_REPOSITORY}/tree/${process.env.GITHUB_REF}`,
         owner,
         ref: process.env.GITHUB_SHA || undefined,
         repo,

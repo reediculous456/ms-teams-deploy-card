@@ -18,7 +18,7 @@ export const formatCozyLayout = (
     .tz(timezone)
     .format(`dddd, MMMM Do YYYY, h:mm:ss a z`);
   const webhookBody = new WebhookBody();
-  const repoUrl = `https://github.com/${process.env.GITHUB_REPOSITORY}`;
+  const repoUrl = `https://${process.env.GITHUB_SERVER_URL}/${process.env.GITHUB_REPOSITORY}`;
   const shortSha = process.env.GITHUB_SHA?.substr(0, 7);
 
   // Set status and elapsedSeconds

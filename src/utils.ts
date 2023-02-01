@@ -22,7 +22,7 @@ export const escapeMarkdownTokens = (text: string) => text
 export const getRunInformation = () => {
   const [ owner, repo ] = (process.env.GITHUB_REPOSITORY || ``).split(`/`);
   return {
-    branchUrl: `https://github.com/${process.env.GITHUB_REPOSITORY}/tree/${process.env.GITHUB_REF}`,
+    branchUrl: `${process.env.GITHUB_SERVER_URL}/${process.env.GITHUB_REPOSITORY}/tree/${process.env.GITHUB_REF}`,
     owner,
     ref: process.env.GITHUB_SHA || undefined,
     repo,
