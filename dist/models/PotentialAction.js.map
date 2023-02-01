@@ -1,1 +1,0 @@
-{"version":3,"file":"PotentialAction.js","sourceRoot":"","sources":["../../src/models/PotentialAction.ts"],"names":[],"mappings":";;;AAAA,MAAa,eAAe;IAM1B,YAAmB,IAAY,EAAE,MAAgB;QAL1C,gBAAU,GAAG,mBAAmB,CAAC;QACjC,aAAO,GAAG,YAAY,CAAC;QACvB,SAAI,GAAG,EAAE,CAAC;QACV,WAAM,GAAa,EAAE,CAAC;QAG3B,IAAI,CAAC,IAAI,GAAG,IAAI,CAAC;QACjB,IAAI,CAAC,MAAM,GAAG,MAAM,CAAC;IACvB,CAAC;CACF;AAVD,0CAUC"}
