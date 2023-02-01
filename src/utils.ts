@@ -1,5 +1,5 @@
 import { components } from '@octokit/openapi-types';
-import { error, getInput, info, setOutput, warning } from '@actions/core';
+import { error, getInput, info, setFailed, setOutput, warning } from '@actions/core';
 import fetch, { Response } from 'node-fetch';
 import moment from 'moment';
 import yaml from 'yaml';
@@ -68,14 +68,21 @@ export const formatAndNotify = async (
 ) => {
   let webhookBody: WebhookBody;
   const { data: commit } = await getOctokitCommit();
-  const cardLayoutStart = getInput(`card-layout-${state}`);
+  const cardLayout = getInput(`card-layout-${state}`);
 
-  if (cardLayoutStart === `compact`) {
-    webhookBody = formatCompactLayout(commit, conclusion, elapsedSeconds);
-  } else if (cardLayoutStart === `cozy`) {
-    webhookBody = formatCozyLayout(commit, conclusion, elapsedSeconds);
-  } else {
-    webhookBody = formatCompleteLayout(commit, conclusion, elapsedSeconds);
+  switch (cardLayout) {
+    case `compact`:
+      webhookBody = formatCompactLayout(commit, conclusion, elapsedSeconds);
+      break;
+    case `cozy`:
+      webhookBody = formatCozyLayout(commit, conclusion, elapsedSeconds);
+      break;
+    case `complete`:
+      webhookBody = formatCompleteLayout(commit, conclusion, elapsedSeconds);
+      break;
+    default:
+      setFailed(`Invalid card layout: ${cardLayout}`);
+      break;
   }
 
   await submitNotification(webhookBody);
