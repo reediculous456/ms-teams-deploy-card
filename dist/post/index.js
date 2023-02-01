@@ -23683,6 +23683,7 @@ const formatAndNotify = async (state, conclusion = `in_progress`, elapsedSeconds
     let webhookBody;
     const { data: commit } = await (0, exports.getOctokitCommit)();
     const cardLayout = (0, core_1.getInput)(`card-layout-${state}`);
+    (0, core_1.info)(`Card layout: ${cardLayout}: ${state}: ${conclusion}: ${elapsedSeconds}`);
     switch (cardLayout) {
         case `compact`:
             webhookBody = (0, compact_1.formatCompactLayout)(commit, conclusion, elapsedSeconds);
