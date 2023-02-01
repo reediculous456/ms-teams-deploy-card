@@ -1,13 +1,13 @@
-import { setFailed, getInput, info } from "@actions/core";
-import { formatAndNotify } from "./utils";
+import { getInput, info, setFailed } from '@actions/core';
+import { formatAndNotify } from './utils';
 
 try {
-  const showCardOnStart = getInput(`show-on-start`).toLowerCase() == "true";
+  const showCardOnStart = JSON.parse(getInput(`show-on-start`).toLowerCase()) === true;
   if (showCardOnStart) {
-    formatAndNotify("start");
+    void formatAndNotify(`start`);
   } else {
-    info("Configured to not show card upon job start.");
+    info(`Configured to not show card upon job start.`);
   }
 } catch (error) {
-  setFailed(error.message);
+  setFailed((error as Error).message);
 }

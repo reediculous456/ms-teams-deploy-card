@@ -1,9 +1,9 @@
-export const CONCLUSION_THEMES: any = {
-  neutral: "5DB1D1",
-  success: "90C978",
-  skipped: "DEDEDE",
-  cancelled: "D99294",
-  timed_out: "FF756D",
-  failure: "C23B23",
-  action_required: "FF3636",
+export const CONCLUSION_THEMES: { [key: string]: string } = {
+  action_required: `FF3636`,
+  cancelled: `D99294`,
+  failure: `C23B23`,
+  neutral: `5DB1D1`,
+  skipped: `DEDEDE`,
+  success: `90C978`,
+  timed_out: `FF756D`,
 };

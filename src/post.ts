@@ -1,27 +1,27 @@
-import { setFailed, info, getInput } from "@actions/core";
-import { formatAndNotify, getWorkflowRunStatus } from "./utils";
+import { getInput, info, setFailed } from '@actions/core';
+import { formatAndNotify, getWorkflowRunStatus } from './utils';
 
 try {
   // setTimeout to give time for Github API to show up the final conclusion
   setTimeout(async () => {
-    const showCardOnExit = getInput(`show-on-exit`).toLowerCase() === "true";
+    const showCardOnExit = getInput(`show-on-exit`).toLowerCase() === `true`;
     const showCardOnFailure =
-      getInput(`show-on-failure`).toLowerCase() === "true";
+      getInput(`show-on-failure`).toLowerCase() === `true`;
 
     const workflowRunStatus = await getWorkflowRunStatus();
     if (
-      (showCardOnExit && !showCardOnFailure) ||
-      (showCardOnFailure && workflowRunStatus.conclusion !== "success")
+      showCardOnExit && !showCardOnFailure ||
+      showCardOnFailure && workflowRunStatus.conclusion !== `success`
     ) {
-      formatAndNotify(
-        "exit",
+      await formatAndNotify(
+        `exit`,
         workflowRunStatus.conclusion,
-        workflowRunStatus.elapsedSeconds
+        workflowRunStatus.elapsedSeconds,
       );
     } else {
-      info("Configured to not show card upon job exit.");
+      info(`Configured to not show card upon job exit.`);
     }
   }, 2000);
 } catch (error) {
-  setFailed(error.message);
+  setFailed((error as Error).message);
 }
