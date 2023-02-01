@@ -1,0 +1,11 @@
+{
+  "deprecated": true,
+  "errorLevel": 2,
+  "format": "group",
+  "packageFile": "{packages/*/,}package.json",
+  "packageManager": "npm",
+  "target": "minor",
+  "reject": [
+    "winston-elasticsearch"
+  ]
+}

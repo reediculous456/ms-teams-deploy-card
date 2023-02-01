@@ -7,20 +7,24 @@
   "author": "Wes Reed",
   "license": "MIT",
   "private": false,
+  "scripts": {
+    "ncc": "ncc build src/index.ts -m -o dist/main && ncc build src/post.ts -m -o dist/post",
+    "check-updates": "ncu --configFileName .check-updates.json",
+    "check-updates:fix": "ncu --configFileName .check-updates.json --upgrade --errorLevel 1",
+    "check-updates:all": "ncu --configFileName .check-updates.json --target latest --errorLevel 1"
+  },
   "dependencies": {
-    "@actions/core": "^1.2.2",
-    "@octokit/rest": "^16.43.1",
-    "moment-timezone": "^0.5.27",
-    "node-fetch": "^2.6.0",
-    "yaml": "^1.10.0"
+    "@actions/core": "^1.10.0",
+    "@octokit/rest": "^19.0.7",
+    "moment-timezone": "^0.5.40",
+    "node-fetch": "^3.3.0",
+    "yaml": "^2.2.1"
   },
   "devDependencies": {
-    "@types/moment-timezone": "^0.5.12",
-    "@types/node-fetch": "^2.5.4",
-    "@zeit/ncc": "^0.21.0",
-    "typescript": "^3.7.5"
-  },
-  "scripts": {
-    "ncc": "ncc build src/index.ts -m -o dist/main && ncc build src/post.ts -m -o dist/post"
+    "@types/moment-timezone": "^0.5.30",
+    "@types/node-fetch": "^2.6.2",
+    "@zeit/ncc": "^0.22.3",
+    "npm-check-updates": "^16.6.3",
+    "typescript": "^4.9.5"
   }
 }
