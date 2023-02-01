@@ -23640,7 +23640,6 @@ const escapeMarkdownTokens = (text) => text
     .replace(/>/g, `\\>`);
 exports.escapeMarkdownTokens = escapeMarkdownTokens;
 const getRunInformation = () => {
-    (0, core_1.info)(JSON.stringify(process.env, undefined, 2));
     const [owner, repo] = (process.env.GITHUB_REPOSITORY || ``).split(`/`);
     return {
         branchUrl: `https://github.com/${process.env.GITHUB_REPOSITORY}/tree/${process.env.GITHUB_REF}`,
