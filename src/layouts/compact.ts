@@ -9,7 +9,7 @@ export const formatCompactLayout = (
   elapsedSeconds?: number,
 ) => {
   const { author } = commit;
-  const repoUrl = `https://${process.env.GITHUB_SERVER_URL}/${process.env.GITHUB_REPOSITORY}`;
+  const repoUrl = `${process.env.GITHUB_SERVER_URL}/${process.env.GITHUB_REPOSITORY}`;
   const shortSha = process.env.GITHUB_SHA?.substr(0, 7);
   const runLink = `${repoUrl}/actions/runs/${process.env.GITHUB_RUN_ID}`;
   const webhookBody = new WebhookBody();

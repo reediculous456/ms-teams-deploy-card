@@ -37,7 +37,7 @@ export const formatCompleteLayout = (
   conclusion: string,
   elapsedSeconds?: number,
 ) => {
-  const repoUrl = `https://${process.env.GITHUB_SERVER_URL}/${process.env.GITHUB_REPOSITORY}`;
+  const repoUrl = `${process.env.GITHUB_SERVER_URL}/${process.env.GITHUB_REPOSITORY}`;
   const branchUrl = `${repoUrl}/tree/${process.env.GITHUB_REF}`;
   const webhookBody = formatCozyLayout(commit, conclusion, elapsedSeconds);
   const [ section ] = webhookBody.sections;
