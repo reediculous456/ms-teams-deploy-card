@@ -1,28 +1,28 @@
 # Microsoft Teams Deploy Card
 
-![MS Teams Deploy Card](https://github.com/toko-bifrost/ms-teams-deploy-card/workflows/MS%20Teams%20Deploy%20Card/badge.svg)
+[![MS Teams Deploy Card](https://github.com/reediculous456/ms-teams-deploy-card/actions/workflows/main.yml/badge.svg)](https://github.com/reediculous456/ms-teams-deploy-card/actions/workflows/main.yml)
 
-A comprehensive notification card in Microsoft Teams for your deployments.
+A comprehensive notification card in Microsoft Teams for your deployments. Forked from [toko-bifrost/ms-teams-deploy-card](https://github.com/toko-bifrost/ms-teams-deploy-card/) due to inactivity.
 
-### Layouts
+## Layouts
 
-#### Complete
+### Complete
 
-![](screenshots/layout-complete.png)
+![Example of Complete Layout](screenshots/layout-complete.png)
 
-#### Cozy
+### Cozy
 
-![](screenshots/layout-cozy.png)
+![Example of Cozy Layout](screenshots/layout-cozy.png)
 
-#### Compact
+### Compact
 
-![](screenshots/layout-compact.png)
+![Example of Compact Layout](screenshots/layout-compact.png)
 
-### Usage
+## Usage
 
 1. Add `MS_TEAMS_WEBHOOK_URI` on your repository's configs on Settings > Secrets. It is the [webhook URI](https://docs.microsoft.com/en-us/microsoftteams/platform/webhooks-and-connectors/how-to/add-incoming-webhook) of the dedicated Microsoft Teams channel for notification.
 
-2) Add a new `step` on your workflow code below `actions/checkout@v2`:
+2. Add a new `step` on your workflow code below `actions/checkout@v3`:
 
 ```yaml
 name: MS Teams Deploy Card
@@ -36,16 +36,16 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       # this is the new step
-      - uses: toko-bifrost/ms-teams-deploy-card@master #  or "./" if in a local set-up
+      - uses: reediculous456/ms-teams-deploy-card@v1 #  or "./" if in a local set-up
         if: always()
         with:
           github-token: ${{ github.token }}
           webhook-uri: ${{ secrets.MS_TEAMS_WEBHOOK_URI }}
 ```
 
-### Configurations
+## Configurations
 
-#### Main Configurations
+### Main Configurations
 
 | Name                | Required | Default    | Description                                                                                                                                                                                                                                                                |
 | ------------------- | -------- | ---------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -57,7 +57,7 @@ jobs:
 | `show-on-exit`      | `false`  | `true`     | Show an MS Teams card upon **_exiting_** this Github Actions job, regardless if it's a successful or a failed exit                                                                                                                                                         |
 | `show-on-failure`   | `false`  | `false`    | Show an MS Teams card upon **_exiting_** this Github Actions job and status is `FAILURE`; **This will override any boolean value of `show-on-exit`**, e.g. with `show-on-exit=false` and `show-on-failure=true`, the notification card will still proceed upon job failure |
 
-#### Cozy and Complete Layout-specific Configurations
+### Cozy and Complete Layout-specific Configurations
 
 | Name                       | Required | Default                      | Description                                                                                                             |
 | -------------------------- | -------- | ---------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
@@ -69,7 +69,7 @@ jobs:
 | `review-diffs-action-text` | `false`  | `"Review commit diffs"`      | Customize action text in reviewing commit diffs                                                                         |
 | `custom-actions`           | `false`  | `null`                       | Add more actions; must be a YAML-parseable multiline string with `text` and `url` pairs                                 |
 
-#### Complete Layout-specific Configurations
+### Complete Layout-specific Configurations
 
 | Name               | Required | Default | Description                                                                                                                                         |
 | ------------------ | -------- | ------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -77,7 +77,7 @@ jobs:
 | `include-files`    | `false`  | `true`  | Include the list of files when `layout` is set to `complete`                                                                                        |
 | `allowed-file-len` | `false`  | `7`     | Allowed number of changed files to display, when `include-files` is set to `true`                                                                   |
 
-### Local Set-up
+## Local Set-up
 
 1. Clone this repository.
 2. Install JS dependencies via `yarn install` or `npm install`.
@@ -85,7 +85,7 @@ jobs:
 4. Do not remove the `dist` repository. Ever.
 5. Check the Actions tab for the errors if there are any.
 
-### Known Issues
+## Known Issues
 
 - Avoid naming your secrets with the prefix `GITHUB_` as secrets are being used as environment variables, and they are reserved for Github Actions' use only. Better stick with `CI_GITHUB_TOKEN`.
 
@@ -94,7 +94,7 @@ jobs:
 - If you are going to set `custom-facts` (only for `complete` layout) and `custom-actions` (on both `cozy` and `complete` layout), look out for the pipe symbol (`|`). Github Actions only accept `string`, `number`, and `boolean` as parameters on job steps. To bypass this restriction and to instill YAML list formatting, we have to set it with a YAML-parseable multiline string containing a YAML list of objects with `name` and `value` on `custom-facts`, and `text` and `url` (i.e. must be a valid URI format) on `custom-actions`. If there is an error in YAML parsing, no custom facts/actions will be appended.
 
 ```yaml
-- uses: toko-bifrost/ms-teams-deploy-card@master
+- uses: reediculous456/ms-teams-deploy-card@v1
   with:
     github-token: ${{ github.token }}
     webhook-uri: ${{ secrets.MS_TEAMS_WEBHOOK_URI }}
