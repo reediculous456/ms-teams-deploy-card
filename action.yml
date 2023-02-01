@@ -1,5 +1,5 @@
-name: Microsoft Teams Deploy Card
-author: Project Toko Bifrost
+name: MS Teams Deploy Card
+author: Wes Reed
 description: Notify your Teams channel with a beautiful, comprehensive deployment card
 branding:
   icon: bell
@@ -74,6 +74,6 @@ inputs:
     default: 7
 
 runs:
-  using: node12
+  using: node16
   main: dist/main/index.js
   post: dist/post/index.js
