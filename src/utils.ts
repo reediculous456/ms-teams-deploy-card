@@ -69,7 +69,6 @@ export const formatAndNotify = async (
   let webhookBody: WebhookBody;
   const { data: commit } = await getOctokitCommit();
   const cardLayout = getInput(`card-layout-${state}`);
-  info(`Card layout: ${cardLayout}: ${state}: ${conclusion}: ${elapsedSeconds}`);
 
   switch (cardLayout) {
     case `compact`:
