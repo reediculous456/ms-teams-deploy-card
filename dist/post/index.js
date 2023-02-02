@@ -35240,8 +35240,12 @@ try {
     setTimeout(async () => {
         const showCardOnExit = (0, core_1.getInput)(`show-on-exit`).toLowerCase() === `true`;
         const showCardOnFailure = (0, core_1.getInput)(`show-on-failure`).toLowerCase() === `true`;
+        const ignoreCancel = (0, core_1.getInput)(`ignore-cancel`).toLowerCase() === `true`;
         const workflowRunStatus = await (0, utils_1.getWorkflowRunStatus)();
-        if (showCardOnExit && !showCardOnFailure ||
+        if (workflowRunStatus.conclusion === `cancelled` && ignoreCancel) {
+            (0, core_1.info)(`Configured to not show card upon job cancel.`);
+        }
+        else if (showCardOnExit && !showCardOnFailure ||
             showCardOnFailure && workflowRunStatus.conclusion !== `success`) {
             await (0, utils_1.formatAndNotify)(`exit`, workflowRunStatus.conclusion, workflowRunStatus.elapsedSeconds);
         }

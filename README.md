@@ -68,6 +68,7 @@ jobs:
 | `view-status-action-text`  | `false`  | `"View build/deploy status"` | Customize action text in viewing the deployment status                                                                  |
 | `review-diffs-action-text` | `false`  | `"Review commit diffs"`      | Customize action text in reviewing commit diffs                                                                         |
 | `custom-actions`           | `false`  | `null`                       | Add more actions; must be a YAML-parseable multiline string with `text` and `url` pairs                                 |
+| `ignore-cancel` | `false` | `false` | Don't show an MS Teams card upon **_exiting_** this Github Actions job and status is `CANCELLED`. |
 
 ### Complete Layout-specific Configurations
 
