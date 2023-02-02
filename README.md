@@ -81,18 +81,19 @@ jobs:
 ## Local Set-up
 
 1. Clone this repository.
-2. Install JS dependencies via `npm install`.
+2. Install JS dependencies via `npm install`
 3. Before pushing you changes, execute `npm run build` to create a build on `dist`.
-4. Do not remove the `dist` repository. Ever.
+   * If Husky installs correctly, this will be done automatically when you commit your changes.
+4. Do not remove the `dist` directory or the plugin will stop working.
 5. Check the Actions tab for the errors if there are any.
 
 ## Known Issues
 
-- Avoid naming your secrets with the prefix `GITHUB_` as secrets are being used as environment variables, and they are reserved for Github Actions' use only. Better stick with `CI_GITHUB_TOKEN`.
+* Avoid naming your secrets with the prefix `GITHUB_` as secrets are being used as environment variables, and they are reserved for Github Actions' use only. Better stick with `CI_GITHUB_TOKEN`.
 
-- As this is still in development, always use the working latest version from the `Releases`, as they have more bug fixes and added features.
+* As this is still in development, always use the working latest version from the `Releases`, as they have more bug fixes and added features.
 
-- If you are going to set `custom-facts` (only for `complete` layout) and `custom-actions` (on both `cozy` and `complete` layout), look out for the pipe symbol (`|`). Github Actions only accept `string`, `number`, and `boolean` as parameters on job steps. To bypass this restriction and to instill YAML list formatting, we have to set it with a YAML-parseable multiline string containing a YAML list of objects with `name` and `value` on `custom-facts`, and `text` and `url` (i.e. must be a valid URI format) on `custom-actions`. If there is an error in YAML parsing, no custom facts/actions will be appended.
+* If you are going to set `custom-facts` (only for `complete` layout) and `custom-actions` (on both `cozy` and `complete` layout), look out for the pipe symbol (`|`). Github Actions only accept `string`, `number`, and `boolean` as parameters on job steps. To bypass this restriction and to instill YAML list formatting, we have to set it with a YAML-parseable multiline string containing a YAML list of objects with `name` and `value` on `custom-facts`, and `text` and `url` (i.e. must be a valid URI format) on `custom-actions`. If there is an error in YAML parsing, no custom facts/actions will be appended.
 
 ```yaml
 - uses: reediculous456/ms-teams-deploy-card@v1
@@ -111,11 +112,11 @@ jobs:
         url: "http://example.com/${{ github.run_id }}"
 ```
 
-- Always set this job with `if: always()` when there are steps between `actions/checkout@v2` and this job.
+* Always set this job with `if: always()` when there are steps between `actions/checkout@v2` and this job.
 
-- Status `IN_PROGRESS` upon job completion means you have set the `jobs.<job_id>.name`. It is encouraged to exclude setting the `jobs.<job_id>.name`. It is because `GITHUB_JOB` is set with `jobs.<job_id>`, and the Github API gives off the value of `jobs.<job_id>.name`, if set. Thus, there is no way to match the current job with the ones in the Github API upon post-job conclusion.
+* Status `IN_PROGRESS` upon job completion means you have set the `jobs.<job_id>.name`. It is encouraged to exclude setting the `jobs.<job_id>.name`. It is because `GITHUB_JOB` is set with `jobs.<job_id>`, and the Github API gives off the value of `jobs.<job_id>.name`, if set. Thus, there is no way to match the current job with the ones in the Github API upon post-job conclusion.
 
-- As much as possible, always set this Github action right after `actions/checkout@v2` and before any job steps. The following diagram shows when this job if going to trigger if done the right way.
+* As much as possible, always set this Github action right after `actions/checkout@v2` and before any job steps. The following diagram shows when this job if going to trigger if done the right way.
 
 ```
   job
