@@ -111,7 +111,7 @@ export const getWorkflowRunStatus = async (): Promise<WorkflowRunStatus> => {
   } else {
     lastStep = job?.steps
       .reverse()
-      .find((step) => step.status === `completed`);
+      .find((step) => step.status === `completed` && step.conclusion !== `skipped`);
   }
 
   const startTime = moment(job?.started_at, moment.ISO_8601);

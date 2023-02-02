@@ -23716,7 +23716,7 @@ const getWorkflowRunStatus = async () => {
         lastStep = stoppedStep;
     }
     else {
-        lastStep = job === null || job === void 0 ? void 0 : job.steps.reverse().find((step) => step.status === `completed`);
+        lastStep = job === null || job === void 0 ? void 0 : job.steps.reverse().find((step) => step.status === `completed` && step.conclusion !== `skipped`);
     }
     const startTime = (0, moment_1.default)(job === null || job === void 0 ? void 0 : job.started_at, moment_1.default.ISO_8601);
     const endTime = (0, moment_1.default)(lastStep === null || lastStep === void 0 ? void 0 : lastStep.completed_at, moment_1.default.ISO_8601);
