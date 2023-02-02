@@ -23329,14 +23329,12 @@ exports.CONCLUSION_THEMES = {
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.formatCompactLayout = void 0;
 const core_1 = __nccwpck_require__(2186);
+const utils_1 = __nccwpck_require__(1314);
 const models_1 = __nccwpck_require__(2859);
 const constants_1 = __nccwpck_require__(9042);
 const formatCompactLayout = (commit, conclusion, elapsedSeconds) => {
-    var _a;
     const { author } = commit;
-    const repoUrl = `${process.env.GITHUB_SERVER_URL}/${process.env.GITHUB_REPOSITORY}`;
-    const shortSha = (_a = process.env.GITHUB_SHA) === null || _a === void 0 ? void 0 : _a.substr(0, 7);
-    const runLink = `${repoUrl}/actions/runs/${process.env.GITHUB_RUN_ID}`;
+    const { branch, branchUrl, repoUrl, runLink, shortSha } = (0, utils_1.getRunInformation)();
     const webhookBody = new models_1.WebhookBody();
     let labels = `\`${conclusion.toUpperCase()}\``;
     if (elapsedSeconds) {
@@ -23349,7 +23347,8 @@ const formatCompactLayout = (commit, conclusion, elapsedSeconds) => {
     webhookBody.themeColor = constants_1.CONCLUSION_THEMES[conclusion] || `957DAD`;
     webhookBody.text =
         `${labels} &nbsp; ${process.env.GITHUB_WORKFLOW} [#${process.env.GITHUB_RUN_NUMBER}](${runLink}) ` +
-            `(commit [${shortSha}](${commit.html_url})) on [${process.env.GITHUB_REPOSITORY}](${repoUrl}) ` +
+            `(commit [${shortSha}](${commit.html_url}) to branch [${branch}](${branchUrl})) ` +
+            `on [${process.env.GITHUB_REPOSITORY}](${repoUrl}) ` +
             `by [@${author.login}](${author.html_url})`;
     return webhookBody;
 };
@@ -23391,8 +23390,7 @@ const formatFilesToDisplay = (files, allowedLength, htmlUrl) => {
 exports.formatFilesToDisplay = formatFilesToDisplay;
 const formatCompleteLayout = (commit, conclusion, elapsedSeconds) => {
     var _a, _b;
-    const repoUrl = `${process.env.GITHUB_SERVER_URL}/${process.env.GITHUB_REPOSITORY}`;
-    const branchUrl = `${repoUrl}/tree/${process.env.GITHUB_REF}`;
+    const { branch, branchUrl, repoUrl } = (0, utils_1.getRunInformation)();
     const webhookBody = (0, cozy_1.formatCozyLayout)(commit, conclusion, elapsedSeconds);
     const [section] = webhookBody.sections;
     section.activityText = undefined;
@@ -23405,7 +23403,7 @@ const formatCompleteLayout = (commit, conclusion, elapsedSeconds) => {
         new models_1.Fact(`Event type:`, `\`${(_a = process.env.GITHUB_EVENT_NAME) === null || _a === void 0 ? void 0 : _a.toUpperCase()}\``),
         new models_1.Fact(`Status:`, labels),
         new models_1.Fact(`Commit message:`, (0, utils_1.escapeMarkdownTokens)(commit.commit.message)),
-        new models_1.Fact(`Repository & branch:`, `[${branchUrl}](${branchUrl})`),
+        new models_1.Fact(`Repository & branch:`, `[${process.env.GITHUB_REPOSITORY}/${branch}](${branchUrl})`),
     ];
     const customFacts = (0, core_1.getInput)(`custom-facts`);
     if (customFacts && customFacts.toLowerCase() !== `null`) {
@@ -23462,14 +23460,12 @@ const constants_1 = __nccwpck_require__(9042);
 const utils_1 = __nccwpck_require__(1314);
 exports.OCTOCAT_LOGO_URL = `https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png`;
 const formatCozyLayout = (commit, conclusion, elapsedSeconds) => {
-    var _a;
     const timezone = (0, core_1.getInput)(`timezone`) || `UTC`;
     const nowFmt = (0, moment_timezone_1.default)()
         .tz(timezone)
         .format(`dddd, MMMM Do YYYY, h:mm:ss a z`);
     const webhookBody = new models_1.WebhookBody();
-    const repoUrl = `${process.env.GITHUB_SERVER_URL}/${process.env.GITHUB_REPOSITORY}`;
-    const shortSha = (_a = process.env.GITHUB_SHA) === null || _a === void 0 ? void 0 : _a.substr(0, 7);
+    const { branch, branchUrl, repoUrl, shortSha } = (0, utils_1.getRunInformation)();
     let labels = `\`${conclusion.toUpperCase()}\``;
     if (elapsedSeconds) {
         labels = `\`${conclusion.toUpperCase()} [${elapsedSeconds}s]\``;
@@ -23491,7 +23487,7 @@ const formatCozyLayout = (commit, conclusion, elapsedSeconds) => {
                 `by [@${author.login}](${author.html_url}) on ${nowFmt}` :
                 nowFmt,
             activityText: `${labels}${actionsConcat}`,
-            activityTitle: `**${process.env.GITHUB_WORKFLOW} #${process.env.GITHUB_RUN_NUMBER} (commit ${shortSha})** on [${process.env.GITHUB_REPOSITORY}](${repoUrl})`,
+            activityTitle: `**${process.env.GITHUB_WORKFLOW} #${process.env.GITHUB_RUN_NUMBER} (commit [${shortSha}](${commit.html_url}) to branch [${branch}](${branchUrl})** on [${process.env.GITHUB_REPOSITORY}](${repoUrl})`,
         },
     ];
     return webhookBody;
@@ -23639,14 +23635,21 @@ const escapeMarkdownTokens = (text) => text
     .replace(/>/g, `\\>`);
 exports.escapeMarkdownTokens = escapeMarkdownTokens;
 const getRunInformation = () => {
+    var _a, _b;
     const [owner, repo] = (process.env.GITHUB_REPOSITORY || ``).split(`/`);
+    const branch = (_a = process.env.GITHUB_REF) === null || _a === void 0 ? void 0 : _a.replace(`refs/heads/`, ``);
+    const repoUrl = `${process.env.GITHUB_SERVER_URL}/${process.env.GITHUB_REPOSITORY}`;
     return {
-        branchUrl: `${process.env.GITHUB_SERVER_URL}/${process.env.GITHUB_REPOSITORY}/tree/${process.env.GITHUB_REF}`,
+        branch,
+        branchUrl: `${process.env.GITHUB_SERVER_URL}/${process.env.GITHUB_REPOSITORY}/tree/${branch}`,
         owner,
         ref: process.env.GITHUB_SHA || undefined,
         repo,
+        repoUrl,
         runId: process.env.GITHUB_RUN_ID || undefined,
+        runLink: `${repoUrl}/actions/runs/${process.env.GITHUB_RUN_ID}`,
         runNum: process.env.GITHUB_RUN_NUMBER || undefined,
+        shortSha: (_b = process.env.GITHUB_SHA) === null || _b === void 0 ? void 0 : _b.substr(0, 7),
     };
 };
 exports.getRunInformation = getRunInformation;

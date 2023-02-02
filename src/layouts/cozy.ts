@@ -3,7 +3,7 @@ import moment from 'moment-timezone';
 import { getInput } from '@actions/core';
 import { WebhookBody } from '../models';
 import { CONCLUSION_THEMES } from '../constants';
-import { renderActions } from '../utils';
+import { getRunInformation, renderActions } from '../utils';
 
 export const OCTOCAT_LOGO_URL =
   `https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png`;
@@ -18,8 +18,7 @@ export const formatCozyLayout = (
     .tz(timezone)
     .format(`dddd, MMMM Do YYYY, h:mm:ss a z`);
   const webhookBody = new WebhookBody();
-  const repoUrl = `${process.env.GITHUB_SERVER_URL}/${process.env.GITHUB_REPOSITORY}`;
-  const shortSha = process.env.GITHUB_SHA?.substr(0, 7);
+  const { branch, branchUrl, repoUrl, shortSha } = getRunInformation();
 
   // Set status and elapsedSeconds
   let labels = `\`${conclusion.toUpperCase()}\``;
@@ -55,7 +54,7 @@ export const formatCozyLayout = (
         nowFmt,
       activityText: `${labels}${actionsConcat}`,
       // eslint-disable-next-line max-len
-      activityTitle: `**${process.env.GITHUB_WORKFLOW} #${process.env.GITHUB_RUN_NUMBER} (commit ${shortSha})** on [${process.env.GITHUB_REPOSITORY}](${repoUrl})`,
+      activityTitle: `**${process.env.GITHUB_WORKFLOW} #${process.env.GITHUB_RUN_NUMBER} (commit [${shortSha}](${commit.html_url}) to branch [${branch}](${branchUrl})** on [${process.env.GITHUB_REPOSITORY}](${repoUrl})`,
     },
   ];
 

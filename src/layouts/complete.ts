@@ -2,7 +2,7 @@ import { components } from '@octokit/openapi-types';
 import { getInput, info, warning } from '@actions/core';
 import yaml from 'yaml';
 import { CustomFact } from 'types';
-import { escapeMarkdownTokens, renderActions } from '../utils';
+import { escapeMarkdownTokens, getRunInformation, renderActions } from '../utils';
 import { Fact } from '../models';
 import { formatCozyLayout } from './cozy';
 
@@ -37,8 +37,7 @@ export const formatCompleteLayout = (
   conclusion: string,
   elapsedSeconds?: number,
 ) => {
-  const repoUrl = `${process.env.GITHUB_SERVER_URL}/${process.env.GITHUB_REPOSITORY}`;
-  const branchUrl = `${repoUrl}/tree/${process.env.GITHUB_REF}`;
+  const { branch, branchUrl, repoUrl } = getRunInformation();
   const webhookBody = formatCozyLayout(commit, conclusion, elapsedSeconds);
   const [ section ] = webhookBody.sections;
 
@@ -66,7 +65,7 @@ export const formatCompleteLayout = (
       `Commit message:`,
       escapeMarkdownTokens(commit.commit.message),
     ),
-    new Fact(`Repository & branch:`, `[${branchUrl}](${branchUrl})`),
+    new Fact(`Repository & branch:`, `[${process.env.GITHUB_REPOSITORY}/${branch}](${branchUrl})`),
   ];
 
   // Set custom facts

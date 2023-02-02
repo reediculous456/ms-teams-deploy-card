@@ -21,13 +21,19 @@ export const escapeMarkdownTokens = (text: string) => text
 
 export const getRunInformation = () => {
   const [ owner, repo ] = (process.env.GITHUB_REPOSITORY || ``).split(`/`);
+  const branch = process.env.GITHUB_REF?.replace(`refs/heads/`, ``);
+  const repoUrl = `${process.env.GITHUB_SERVER_URL}/${process.env.GITHUB_REPOSITORY}`;
   return {
-    branchUrl: `${process.env.GITHUB_SERVER_URL}/${process.env.GITHUB_REPOSITORY}/tree/${process.env.GITHUB_REF}`,
+    branch,
+    branchUrl: `${process.env.GITHUB_SERVER_URL}/${process.env.GITHUB_REPOSITORY}/tree/${branch}`,
     owner,
     ref: process.env.GITHUB_SHA || undefined,
     repo,
+    repoUrl,
     runId: process.env.GITHUB_RUN_ID || undefined,
+    runLink: `${repoUrl}/actions/runs/${process.env.GITHUB_RUN_ID}`,
     runNum: process.env.GITHUB_RUN_NUMBER || undefined,
+    shortSha: process.env.GITHUB_SHA?.substr(0, 7),
   };
 };
 
