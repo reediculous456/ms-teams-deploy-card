@@ -54,7 +54,7 @@ export const formatCozyLayout = (
         nowFmt,
       activityText: `${labels}${actionsConcat}`,
       // eslint-disable-next-line max-len
-      activityTitle: `**${process.env.GITHUB_WORKFLOW} #${process.env.GITHUB_RUN_NUMBER} (commit [${shortSha}](${commit.html_url}) to branch [${branch}](${branchUrl})** on [${process.env.GITHUB_REPOSITORY}](${repoUrl})`,
+      activityTitle: `**${process.env.GITHUB_WORKFLOW} #${process.env.GITHUB_RUN_NUMBER} (commit [${shortSha}](${commit.html_url}) to branch [${branch}](${branchUrl}))** on [${process.env.GITHUB_REPOSITORY}](${repoUrl})`,
     },
   ];
 

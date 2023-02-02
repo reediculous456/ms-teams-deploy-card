@@ -23487,7 +23487,7 @@ const formatCozyLayout = (commit, conclusion, elapsedSeconds) => {
                 `by [@${author.login}](${author.html_url}) on ${nowFmt}` :
                 nowFmt,
             activityText: `${labels}${actionsConcat}`,
-            activityTitle: `**${process.env.GITHUB_WORKFLOW} #${process.env.GITHUB_RUN_NUMBER} (commit [${shortSha}](${commit.html_url}) to branch [${branch}](${branchUrl})** on [${process.env.GITHUB_REPOSITORY}](${repoUrl})`,
+            activityTitle: `**${process.env.GITHUB_WORKFLOW} #${process.env.GITHUB_RUN_NUMBER} (commit [${shortSha}](${commit.html_url}) to branch [${branch}](${branchUrl}))** on [${process.env.GITHUB_REPOSITORY}](${repoUrl})`,
         },
     ];
     return webhookBody;
