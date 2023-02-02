@@ -8,15 +8,15 @@ A comprehensive notification card in Microsoft Teams for your deployments. Forke
 
 ### Complete
 
-![Example of Complete Layout](screenshots/layout-complete.png)
+![Example of Complete Layout](docs/layout-complete.png)
 
 ### Cozy
 
-![Example of Cozy Layout](screenshots/layout-cozy.png)
+![Example of Cozy Layout](docs/layout-cozy.png)
 
 ### Compact
 
-![Example of Compact Layout](screenshots/layout-compact.png)
+![Example of Compact Layout](docs/layout-compact.png)
 
 ## Usage
 
