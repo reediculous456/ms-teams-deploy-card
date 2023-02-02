@@ -23348,7 +23348,7 @@ const formatCompactLayout = (commit, conclusion, elapsedSeconds) => {
     }
     webhookBody.themeColor = constants_1.CONCLUSION_THEMES[conclusion] || `957DAD`;
     webhookBody.text =
-        `${labels} &nbsp; CI [#${process.env.GITHUB_RUN_NUMBER}](${runLink}) ` +
+        `${labels} &nbsp; ${process.env.GITHUB_WORKFLOW} [#${process.env.GITHUB_RUN_NUMBER}](${runLink}) ` +
             `(commit [${shortSha}](${commit.html_url})) on [${process.env.GITHUB_REPOSITORY}](${repoUrl}) ` +
             `by [@${author.login}](${author.html_url})`;
     return webhookBody;
@@ -23491,7 +23491,7 @@ const formatCozyLayout = (commit, conclusion, elapsedSeconds) => {
                 `by [@${author.login}](${author.html_url}) on ${nowFmt}` :
                 nowFmt,
             activityText: `${labels}${actionsConcat}`,
-            activityTitle: `**CI #${process.env.GITHUB_RUN_NUMBER} (commit ${shortSha})** on [${process.env.GITHUB_REPOSITORY}](${repoUrl})`,
+            activityTitle: `**${process.env.GITHUB_WORKFLOW} #${process.env.GITHUB_RUN_NUMBER} (commit ${shortSha})** on [${process.env.GITHUB_REPOSITORY}](${repoUrl})`,
         },
     ];
     return webhookBody;
@@ -23569,7 +23569,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.WebhookBody = void 0;
 class WebhookBody {
     constructor() {
-        this.summary = `Github Actions CI`;
+        this.summary = `Github Actions ${process.env.GITHUB_WORKFLOW}`;
         this.themeColor = `FFF49C`;
         this.sections = [];
     }
