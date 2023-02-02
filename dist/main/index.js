@@ -23832,10 +23832,22 @@ const formatCozyLayout = (commit, conclusion, elapsedSeconds) => {
         {
             activityImage: (author === null || author === void 0 ? void 0 : author.avatar_url) || exports.OCTOCAT_LOGO_URL,
             activitySubtitle: author ?
-                `by [@${author.login}](${author.html_url}) on ${nowFmt}` :
+                `by [@<at>${author.login}</at>](${author.html_url}) on ${nowFmt}` :
                 nowFmt,
             activityText: `${labels}${actionsConcat}`,
             activityTitle: `**${process.env.GITHUB_WORKFLOW} #${process.env.GITHUB_RUN_NUMBER} (commit [${shortSha}](${commit.html_url}) to branch [${branch}](${branchUrl}))** on [${process.env.GITHUB_REPOSITORY}](${repoUrl})`,
+            msteams: {
+                entities: [
+                    {
+                        mentioned: {
+                            id: author.email,
+                            name: author.name,
+                        },
+                        text: `<at>${author.login}</at>`,
+                        type: `mention`,
+                    },
+                ],
+            },
         },
     ];
     return webhookBody;

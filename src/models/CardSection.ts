@@ -7,4 +7,5 @@ export class CardSection {
   public activityText?: string;
   public facts?: Fact[];
   public potentialAction?: PotentialAction[];
+  public msteams?: { entities?: Array<{ type: string, text: string, mentioned?: { id: string, name: string } }> };
 }
