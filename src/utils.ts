@@ -41,7 +41,7 @@ export const getOctokitCommit = () => {
   const runInfo = getRunInformation();
   info(`Workflow run information: ${JSON.stringify(runInfo, undefined, 2)}`);
 
-  return octokit.repos.getCommit({
+  return octokit.rest.repos.getCommit({
     owner: runInfo.owner,
     ref: runInfo.ref || ``,
     repo: runInfo.repo,
@@ -97,7 +97,7 @@ export const formatAndNotify = async (
 export const getWorkflowRunStatus = async (): Promise<WorkflowRunStatus> => {
   const runInfo = getRunInformation();
 
-  const workflowJobs = await octokit.actions.listJobsForWorkflowRun({
+  const workflowJobs = await octokit.rest.actions.listJobsForWorkflowRun({
     owner: runInfo.owner,
     repo: runInfo.repo,
     run_id: parseInt(runInfo.runId || `1`),
