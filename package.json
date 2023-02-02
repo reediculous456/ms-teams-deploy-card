@@ -16,7 +16,8 @@
     "audit": "audit-ci --config .audit-ci.json",
     "check-updates": "ncu --configFileName .check-updates.json",
     "check-updates:fix": "ncu --configFileName .check-updates.json --upgrade --errorLevel 1",
-    "check-updates:all": "ncu --configFileName .check-updates.json --target latest --errorLevel 1"
+    "check-updates:all": "ncu --configFileName .check-updates.json --target latest --errorLevel 1",
+    "prepare": "husky install"
   },
   "dependencies": {
     "@actions/core": "^1.10.0",
@@ -29,15 +30,15 @@
   "devDependencies": {
     "@types/moment-timezone": "^0.5.30",
     "@types/node-fetch": "^2.6.2",
-    "@typescript-eslint/eslint-plugin": "^5.48.1",
-    "@typescript-eslint/parser": "^5.48.1",
+    "@typescript-eslint/eslint-plugin": "^5.50.0",
+    "@typescript-eslint/parser": "^5.50.0",
     "@vercel/ncc": "^0.36.1",
-    "audit-ci": "^6.6.0",
-    "eslint": "^8.31.0",
-    "eslint-plugin-import": "^2.26.0",
+    "audit-ci": "^6.6.1",
+    "eslint": "^8.33.0",
+    "eslint-plugin-import": "^2.27.5",
     "eslint-plugin-import-quotes": "^0.0.1",
     "eslint-plugin-sort-destructure-keys": "^1.4.0",
-    "husky": "^7.0.4",
+    "husky": "^8.0.3",
     "npm-check-updates": "^16.6.3",
     "rimraf": "^4.1.2",
     "typescript": "^4.9.5"
