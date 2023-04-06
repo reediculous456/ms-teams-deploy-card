@@ -23697,7 +23697,7 @@ const formatCompactLayout = (commit, conclusion, elapsedSeconds) => {
         `${labels} &nbsp; ${process.env.GITHUB_WORKFLOW} [#${process.env.GITHUB_RUN_NUMBER}](${runLink}) ` +
             `(commit [${shortSha}](${commit.html_url}) to branch [${branch}](${branchUrl})) ` +
             `on [${process.env.GITHUB_REPOSITORY}](${repoUrl}) ` +
-            `by [@${author.login}](${author.html_url})`;
+            `by [@${author === null || author === void 0 ? void 0 : author.login}](${author === null || author === void 0 ? void 0 : author.html_url})`;
     return webhookBody;
 };
 exports.formatCompactLayout = formatCompactLayout;
