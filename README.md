@@ -36,7 +36,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       # this is the new step
-      - uses: reediculous456/ms-teams-deploy-card@v1 #  or "./" if in a local set-up
+      - uses: reediculous456/ms-teams-deploy-card@v2 #  or "./" if in a local set-up
         if: always()
         with:
           github-token: ${{ github.token }}
@@ -96,7 +96,7 @@ jobs:
 * If you are going to set `custom-facts` (only for `complete` layout) and `custom-actions` (on both `cozy` and `complete` layout), look out for the pipe symbol (`|`). Github Actions only accept `string`, `number`, and `boolean` as parameters on job steps. To bypass this restriction and to instill YAML list formatting, we have to set it with a YAML-parseable multiline string containing a YAML list of objects with `name` and `value` on `custom-facts`, and `text` and `url` (i.e. must be a valid URI format) on `custom-actions`. If there is an error in YAML parsing, no custom facts/actions will be appended.
 
 ```yaml
-- uses: reediculous456/ms-teams-deploy-card@v1
+- uses: reediculous456/ms-teams-deploy-card@v2
   with:
     github-token: ${{ github.token }}
     webhook-uri: ${{ secrets.MS_TEAMS_WEBHOOK_URI }}
