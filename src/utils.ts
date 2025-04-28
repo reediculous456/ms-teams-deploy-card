@@ -1,26 +1,34 @@
-import { components } from '@octokit/openapi-types';
-import { error, getInput, info, setFailed, setOutput, warning } from '@actions/core';
-import fetch, { Response } from 'node-fetch';
-import moment from 'moment';
-import yaml from 'yaml';
-import { octokit } from 'octokit';
-import { PotentialAction, WebhookBody } from './models';
-import { formatCompactLayout } from './layouts/compact';
-import { formatCozyLayout } from './layouts/cozy';
-import { formatCompleteLayout } from './layouts/complete';
-import { CustomAction, WorkflowRunStatus } from './types';
+import { components } from "@octokit/openapi-types";
+import {
+  error,
+  getInput,
+  info,
+  setFailed,
+  setOutput,
+  warning,
+} from "@actions/core";
+import fetch, { Response } from "node-fetch";
+import moment from "moment";
+import yaml from "yaml";
+import { octokit } from "octokit";
+import { PotentialAction, WebhookBody } from "./models";
+import { formatCompactLayout } from "./layouts/compact";
+import { formatCozyLayout } from "./layouts/cozy";
+import { formatCompleteLayout } from "./layouts/complete";
+import { CustomAction, WorkflowRunStatus } from "./types";
 
-export const escapeMarkdownTokens = (text: string) => text
-  .replace(/\n {1,}/g, `\n `)
-  .replace(/_/g, `\\_`)
-  .replace(/\*/g, `\\*`)
-  .replace(/\|/g, `\\|`)
-  .replace(/#/g, `\\#`)
-  .replace(/-/g, `\\-`)
-  .replace(/>/g, `\\>`);
+export const escapeMarkdownTokens = (text: string) =>
+  text
+    .replace(/\n {1,}/g, `\n `)
+    .replace(/_/g, `\\_`)
+    .replace(/\*/g, `\\*`)
+    .replace(/\|/g, `\\|`)
+    .replace(/#/g, `\\#`)
+    .replace(/-/g, `\\-`)
+    .replace(/>/g, `\\>`);
 
 export const getRunInformation = () => {
-  const [ owner, repo ] = (process.env.GITHUB_REPOSITORY || ``).split(`/`);
+  const [owner, repo] = (process.env.GITHUB_REPOSITORY || ``).split(`/`);
   const branch = process.env.GITHUB_REF?.replace(`refs/heads/`, ``);
   const repoUrl = `${process.env.GITHUB_SERVER_URL}/${process.env.GITHUB_REPOSITORY}`;
   return {
@@ -70,7 +78,7 @@ export const submitNotification = (webhookBody: WebhookBody) => {
 export const formatAndNotify = async (
   state: "start" | "exit",
   conclusion = `in_progress`,
-  elapsedSeconds?: number,
+  elapsedSeconds?: number
 ) => {
   let webhookBody: WebhookBody;
   const { data: commit } = await getOctokitCommit();
@@ -103,29 +111,51 @@ export const getWorkflowRunStatus = async (): Promise<WorkflowRunStatus> => {
     run_id: parseInt(runInfo.runId || `1`),
   });
 
-  const job = workflowJobs.data.jobs.find((j) => j.name === process.env.GITHUB_JOB);
-
   let lastStep: components["schemas"]["job"]["steps"][0];
-  const stoppedStep = job?.steps.find((step) =>
-    step.conclusion === `failure` ||
-      step.conclusion === `timed_out` ||
-      step.conclusion === `cancelled` ||
-      step.conclusion === `action_required`);
+  let jobStartDate;
 
-  if (stoppedStep) {
-    lastStep = stoppedStep;
-  } else {
-    lastStep = job?.steps
-      .reverse()
-      .find((step) => step.status === `completed` && step.conclusion !== `skipped`);
+  /**
+   * https://github.com/patrickpaulin/ms-teams-deploy-card/blob/master/src/utils.ts
+   * We have to verify all jobs steps. We don't know
+   * if users are using multiple jobs or not. Btw,
+   * we don't need to check if GITHUB_JOB env is the
+   * same of the Octokit job name, because it is different.
+   *
+   * @note We are using a quadratic way to search all steps.
+   * But we have just a few elements, so this is not
+   * a performance issue
+   *
+   * The conclusion steps, according to the documentation, are:
+   * <success>, <cancelled>, <failure> and <skipped>
+   */
+  let abort = false;
+  for (let job of workflowJobs.data.jobs) {
+    for (let step of job.steps) {
+      // check if current step still running
+      if (step.completed_at !== null) {
+        lastStep = step;
+        jobStartDate = job.started_at;
+        // Some step/job has failed. Get out from here.
+        if (step?.conclusion !== "success" && step?.conclusion !== "skipped") {
+          abort = true;
+          break;
+        }
+        /**
+         * If nothing has failed, so we have a success scenario
+         * @note ignoring skipped cases.
+         */
+        lastStep.conclusion = "success";
+      }
+    }
+    // // Some step/job has failed. Get out from here.
+    if (abort) break;
   }
-
-  const startTime = moment(job?.started_at, moment.ISO_8601);
+  const startTime = moment(jobStartDate, moment.ISO_8601);
   const endTime = moment(lastStep?.completed_at, moment.ISO_8601);
 
   return {
+    elapsedSeconds: endTime.diff(startTime, "seconds"),
     conclusion: lastStep?.conclusion,
-    elapsedSeconds: endTime.diff(startTime, `seconds`),
   };
 };
 
@@ -133,12 +163,12 @@ export const renderActions = (statusUrl: string, diffUrl: string) => {
   const actions: PotentialAction[] = [];
   if (getInput(`enable-view-status-action`).toLowerCase() === `true`) {
     actions.push(
-      new PotentialAction(getInput(`view-status-action-text`), [ statusUrl ]),
+      new PotentialAction(getInput(`view-status-action-text`), [statusUrl])
     );
   }
   if (getInput(`enable-review-diffs-action`).toLowerCase() === `true`) {
     actions.push(
-      new PotentialAction(getInput(`review-diffs-action-text`), [ diffUrl ]),
+      new PotentialAction(getInput(`review-diffs-action-text`), [diffUrl])
     );
   }
 
@@ -155,7 +185,7 @@ export const renderActions = (statusUrl: string, diffUrl: string) => {
             action.url !== undefined &&
             action.url.match(/https?:\/\/\S+/g)
           ) {
-            actions.push(new PotentialAction(action.text, [ action.url ]));
+            actions.push(new PotentialAction(action.text, [action.url]));
             customActionsCounter += 1;
           }
         });

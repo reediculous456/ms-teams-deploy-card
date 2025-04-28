@@ -24054,23 +24054,29 @@ const getWorkflowRunStatus = async () => {
         repo: runInfo.repo,
         run_id: parseInt(runInfo.runId || `1`),
     });
-    const job = workflowJobs.data.jobs.find((j) => j.name === process.env.GITHUB_JOB);
     let lastStep;
-    const stoppedStep = job === null || job === void 0 ? void 0 : job.steps.find((step) => step.conclusion === `failure` ||
-        step.conclusion === `timed_out` ||
-        step.conclusion === `cancelled` ||
-        step.conclusion === `action_required`);
-    if (stoppedStep) {
-        lastStep = stoppedStep;
+    let jobStartDate;
+    let abort = false;
+    for (let job of workflowJobs.data.jobs) {
+        for (let step of job.steps) {
+            if (step.completed_at !== null) {
+                lastStep = step;
+                jobStartDate = job.started_at;
+                if ((step === null || step === void 0 ? void 0 : step.conclusion) !== "success" && (step === null || step === void 0 ? void 0 : step.conclusion) !== "skipped") {
+                    abort = true;
+                    break;
+                }
+                lastStep.conclusion = "success";
+            }
+        }
+        if (abort)
+            break;
     }
-    else {
-        lastStep = job === null || job === void 0 ? void 0 : job.steps.reverse().find((step) => step.status === `completed` && step.conclusion !== `skipped`);
-    }
-    const startTime = (0, moment_1.default)(job === null || job === void 0 ? void 0 : job.started_at, moment_1.default.ISO_8601);
+    const startTime = (0, moment_1.default)(jobStartDate, moment_1.default.ISO_8601);
     const endTime = (0, moment_1.default)(lastStep === null || lastStep === void 0 ? void 0 : lastStep.completed_at, moment_1.default.ISO_8601);
     return {
+        elapsedSeconds: endTime.diff(startTime, "seconds"),
         conclusion: lastStep === null || lastStep === void 0 ? void 0 : lastStep.conclusion,
-        elapsedSeconds: endTime.diff(startTime, `seconds`),
     };
 };
 exports.getWorkflowRunStatus = getWorkflowRunStatus;
