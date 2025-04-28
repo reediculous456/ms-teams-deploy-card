@@ -1,12 +1,5 @@
 import { components } from '@octokit/openapi-types';
-import {
-  error,
-  getInput,
-  info,
-  setFailed,
-  setOutput,
-  warning,
-} from '@actions/core';
+import { error, getInput, info, setFailed, setOutput, warning } from '@actions/core';
 import fetch, { Response } from 'node-fetch';
 import moment from 'moment';
 import yaml from 'yaml';
@@ -17,15 +10,14 @@ import { formatCozyLayout } from './layouts/cozy';
 import { formatCompleteLayout } from './layouts/complete';
 import { CustomAction, WorkflowRunStatus } from './types';
 
-export const escapeMarkdownTokens = (text: string) =>
-  text
-    .replace(/\n {1,}/g, `\n `)
-    .replace(/_/g, `\\_`)
-    .replace(/\*/g, `\\*`)
-    .replace(/\|/g, `\\|`)
-    .replace(/#/g, `\\#`)
-    .replace(/-/g, `\\-`)
-    .replace(/>/g, `\\>`);
+export const escapeMarkdownTokens = (text: string) => text
+  .replace(/\n {1,}/g, `\n `)
+  .replace(/_/g, `\\_`)
+  .replace(/\*/g, `\\*`)
+  .replace(/\|/g, `\\|`)
+  .replace(/#/g, `\\#`)
+  .replace(/-/g, `\\-`)
+  .replace(/>/g, `\\>`);
 
 export const getRunInformation = () => {
   const [ owner, repo ] = (process.env.GITHUB_REPOSITORY || ``).split(`/`);
@@ -116,14 +108,11 @@ export const getWorkflowRunStatus = async (): Promise<WorkflowRunStatus> => {
 
   /**
    * https://github.com/patrickpaulin/ms-teams-deploy-card/blob/master/src/utils.ts
-   * We have to verify all jobs steps. We don't know
-   * if users are using multiple jobs or not. Btw,
-   * we don't need to check if GITHUB_JOB env is the
-   * same of the Octokit job name, because it is different.
+   * We have to verify all jobs steps. We don't know if users are using multiple jobs or not.
+   * We don't need to check if GITHUB_JOB env is the same of the Octokit job name, because it is different.
    *
-   * @note We are using a quadratic way to search all steps.
-   * But we have just a few elements, so this is not
-   * a performance issue
+   * @note We are using a quadratic way to search all steps,
+   * but we have just a few elements, so this is not a performance issue
    *
    * The conclusion steps, according to the documentation, are:
    * <success>, <cancelled>, <failure> and <skipped>
@@ -147,9 +136,10 @@ export const getWorkflowRunStatus = async (): Promise<WorkflowRunStatus> => {
         lastStep.conclusion = `success`;
       }
     }
-    // // Some step/job has failed. Get out from here.
+    // Some step/job has failed. Get out from here.
     if (abort) { break; }
   }
+
   const startTime = moment(jobStartDate, moment.ISO_8601);
   const endTime = moment(lastStep?.completed_at, moment.ISO_8601);
 
