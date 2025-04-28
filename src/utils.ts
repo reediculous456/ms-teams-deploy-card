@@ -103,24 +103,44 @@ export const getWorkflowRunStatus = async (): Promise<WorkflowRunStatus> => {
     run_id: parseInt(runInfo.runId || `1`),
   });
 
-  const job = workflowJobs.data.jobs.find((j) => j.name === process.env.GITHUB_JOB);
-
   let lastStep: components["schemas"]["job"]["steps"][0];
-  const stoppedStep = job?.steps.find((step) =>
-    step.conclusion === `failure` ||
-      step.conclusion === `timed_out` ||
-      step.conclusion === `cancelled` ||
-      step.conclusion === `action_required`);
+  let jobStartDate: string;
 
-  if (stoppedStep) {
-    lastStep = stoppedStep;
-  } else {
-    lastStep = job?.steps
-      .reverse()
-      .find((step) => step.status === `completed` && step.conclusion !== `skipped`);
+  /**
+   * https://github.com/patrickpaulin/ms-teams-deploy-card/blob/master/src/utils.ts
+   * We have to verify all jobs steps. We don't know if users are using multiple jobs or not.
+   * We don't need to check if GITHUB_JOB env is the same of the Octokit job name, because it is different.
+   *
+   * @note We are using a quadratic way to search all steps,
+   * but we have just a few elements, so this is not a performance issue
+   *
+   * The conclusion steps, according to the documentation, are:
+   * <success>, <cancelled>, <failure> and <skipped>
+   */
+  let abort = false;
+  for (const job of workflowJobs.data.jobs) {
+    for (const step of job.steps) {
+      // check if current step still running
+      if (step.completed_at !== null) {
+        lastStep = step;
+        jobStartDate = job.started_at;
+        // Some step/job has failed. Get out from here.
+        if (step?.conclusion !== `success` && step?.conclusion !== `skipped`) {
+          abort = true;
+          break;
+        }
+        /**
+         * If nothing has failed, so we have a success scenario
+         * @note ignoring skipped cases.
+         */
+        lastStep.conclusion = `success`;
+      }
+    }
+    // Some step/job has failed. Get out from here.
+    if (abort) { break; }
   }
 
-  const startTime = moment(job?.started_at, moment.ISO_8601);
+  const startTime = moment(jobStartDate, moment.ISO_8601);
   const endTime = moment(lastStep?.completed_at, moment.ISO_8601);
 
   return {
