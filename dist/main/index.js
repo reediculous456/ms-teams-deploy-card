@@ -24057,26 +24057,27 @@ const getWorkflowRunStatus = async () => {
     let lastStep;
     let jobStartDate;
     let abort = false;
-    for (let job of workflowJobs.data.jobs) {
-        for (let step of job.steps) {
+    for (const job of workflowJobs.data.jobs) {
+        for (const step of job.steps) {
             if (step.completed_at !== null) {
                 lastStep = step;
                 jobStartDate = job.started_at;
-                if ((step === null || step === void 0 ? void 0 : step.conclusion) !== "success" && (step === null || step === void 0 ? void 0 : step.conclusion) !== "skipped") {
+                if ((step === null || step === void 0 ? void 0 : step.conclusion) !== `success` && (step === null || step === void 0 ? void 0 : step.conclusion) !== `skipped`) {
                     abort = true;
                     break;
                 }
-                lastStep.conclusion = "success";
+                lastStep.conclusion = `success`;
             }
         }
-        if (abort)
+        if (abort) {
             break;
+        }
     }
     const startTime = (0, moment_1.default)(jobStartDate, moment_1.default.ISO_8601);
     const endTime = (0, moment_1.default)(lastStep === null || lastStep === void 0 ? void 0 : lastStep.completed_at, moment_1.default.ISO_8601);
     return {
-        elapsedSeconds: endTime.diff(startTime, "seconds"),
         conclusion: lastStep === null || lastStep === void 0 ? void 0 : lastStep.conclusion,
+        elapsedSeconds: endTime.diff(startTime, `seconds`),
     };
 };
 exports.getWorkflowRunStatus = getWorkflowRunStatus;
